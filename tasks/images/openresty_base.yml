@@ -1,0 +1,9 @@
+- file:
+    state: absent
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+
+- name: Git checkout https://github.com/openresty/docker-openresty
+  git:
+    repo: "https://github.com/openresty/docker-openresty"
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+    force: yes

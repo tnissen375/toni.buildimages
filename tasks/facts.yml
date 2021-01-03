@@ -1,0 +1,7 @@
+---
+- name: set facts
+  set_fact:
+    image_{{ item.name }}: "{{ item.namespace }}/{{ item.name }}:{{ item.tag }}"
+    image_file_{{ item.name }}: "{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
+  loop:
+    "{{ images }}"

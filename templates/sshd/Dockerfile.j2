@@ -1,0 +1,20 @@
+FROM {{ item.basename }}:{{ item.basetag }}
+
+RUN apk add --no-cache openssh
+RUN mkdir ~/.ssh \
+  && ssh-keygen -A \
+  && echo "root:root" | chpasswd \
+  && echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config \
+  && echo 'Port 22' >> /etc/ssh/sshd_config \
+  && echo -e " \
+Match User root \n\
+  PubkeyAuthentication yes \n\
+  AllowTcpForwarding yes\n\
+  X11Forwarding no\n\
+  AllowAgentForwarding no\n\
+  ForceCommand /bin/false\n\
+" >> /etc/ssh/sshd_config
+
+EXPOSE 22
+CMD /usr/sbin/sshd -D -e "$@"
+

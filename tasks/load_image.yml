@@ -1,0 +1,24 @@
+---
+- name: remove images
+  when: force_images|default(false)
+  docker_image:
+    name: "{{ item.image }}"
+    force_absent: yes
+    state: absent    
+
+- name: Register image file
+  stat:
+    path: "{{ user_path }}/{{ item.image }}.tar"
+  register: is_image
+
+- name: copy tarball to host
+  when: not is_image.stat.exists or force_images|default(false)
+  copy:
+    src: "{{ user_path }}/{{ item.image }}.tar"
+    dest: "{{ user_path }}/{{ item.image }}.tar"
+
+- name: load image from tarball
+  docker_image:
+    name: "{{ item.image | replace('_','/') }}"
+    load_path: "{{ user_path }}/{{ item.image }}.tar"
+    source: load

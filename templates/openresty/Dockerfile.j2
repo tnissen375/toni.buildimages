@@ -1,0 +1,51 @@
+FROM {{ item.namespace }}/{{ item.basename }}:{{ item.basetag }}
+RUN set -xe; \
+        # Symlink openresety config folder to /etc/nginx 
+        rm -rf /etc/nginx && ln -s /usr/local/openresty/nginx/conf /etc/nginx ; \
+        mkdir -p /etc/nginx/conf.d ; \
+        mkdir -p /var/log/nginx/ ; \
+        opm install bungle/lua-resty-session ; \
+        opm install zmartzone/lua-resty-openidc ; \
+        # Also symlink nginx binary to a location in PATH
+        ln -s /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx 
+
+# Install/updates certificates
+RUN apk add --no-cache --virtual .run-deps \
+    ca-certificates bash openssl \
+    tini \
+    && update-ca-certificates 
+
+RUN openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
+       -subj '/CN=dummy-valid-ssl' \
+       -keyout /etc/ssl/dummy-ssl-fallback.key \
+       -out /etc/ssl/dummy-ssl-fallback.crt
+
+#https://github.com/nginxinc/docker-nginx-unprivileged/blob/main/stable/alpine/Dockerfile#L12
+#RUN addgroup -g 101 -S nginx \
+#    && adduser -S -D -H -u 101 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx 
+
+# implement changes required to run NGINX as an unprivileged user
+#RUN sed -i 's/#user.*/user  nginx;/g' /etc/nginx/nginx.conf \
+#RUN sed -i "/^http {/a \    include snippets/proxy.conf;\n    include snippets/ssl.conf;\n" /etc/nginx/nginx.conf 
+
+# nginx user must own the cache and etc directory to write cache and tweak the nginx config
+#    && mkdir /var/cache/nginx \
+#    && chown -R 101:0 /var/cache/nginx \
+#    && chmod -R g+w /var/cache/nginx \
+#    && chown -R 101:0 /etc/nginx \
+#    && chmod -R g+w /etc/nginx
+
+COPY ./snippets /etc/nginx/snippets
+COPY ./dhp-4096.pem /etc/nginx/ssl/dhp-4096.pem
+COPY ./start /usr/sbin
+
+RUN chmod +x /usr/sbin/start \
+     && sed -i 's/worker_processes  1/worker_processes  auto/' /etc/nginx/nginx.conf
+
+#USER 101
+#CMD ["/usr/sbin/n/etc/nginxginx", "-g", "daemon off;"]
+CMD ["/usr/sbin/start"]
+
+# Use SIGQUIT instead of default SIGTERM to cleanly drain requests
+# See https://github.com/openresty/docker-openresty/blob/master/README.md#tips--pitfalls
+STOPSIGNAL SIGQUIT

@@ -1,0 +1,10 @@
+---
+- name: Deploy htaccess
+  template:
+    src: limesurvey3/htaccess
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/htaccess"
+
+- name: Deploy config.php
+  template:
+    src: limesurvey3/config.php.j2
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/config.php"    

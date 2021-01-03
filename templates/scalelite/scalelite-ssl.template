@@ -1,0 +1,33 @@
+access_log stderr combined;
+
+server {
+	server_name $URL_HOST;
+
+	listen 80;
+	listen [::]:80;
+
+    location / {
+      return  301 https://$host$request_uri;
+    }
+}
+
+server {
+	server_name $URL_HOST;
+
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+
+    include snippets/certpath.conf;
+
+    location /.well-known/acme-challenge {
+        root /var/www/letsencrypt;
+        try_files $uri $uri/ =404;
+		break;
+    }
+
+	include snippets/ssl.conf;
+	include snippets/logs.conf;
+	
+    include conf.d/scalelite/*;
+    include conf.d/scalelite.common;
+}

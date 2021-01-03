@@ -1,0 +1,93 @@
+---
+# - file:
+#     state: absent
+#     path: "{{ user_path }}/docker/build/{{ item.name }}"
+#   loop:
+#     "{{ images }}"
+
+#fetch runs of memory on small machines - so using rsync
+- name: Ensure basic packages
+  apt:
+    name:
+      - rsync
+    state: latest
+
+- file:
+    state: directory
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+    recurse: yes
+    owner: root
+    group: root
+    mode: '0777'
+  loop:
+    "{{ images }}"
+
+## This works with local roles but not with roles stored in .ansible
+# - name: Register file
+#   local_action:  stat path="{{ role_path }}/tasks/images/{{ item.name }}.yml"
+#   register: imageconf
+#   loop:
+#     "{{ images }}"
+
+# - debug: msg="{{ item.item.name }}"
+#   loop:
+#     "{{ imageconf.results }}"
+
+- include_tasks: "./images/{{ item.name }}.yml"
+  with_first_found:
+    - files:
+        - "{{ role_path }}/images/{{ item.name }}.yml"
+      skip: true
+  ignore_errors: yes
+  loop:
+    "{{ images }}"
+
+- name: Deploy Dockerfile
+  template:
+    src: "{{ item.name }}/Dockerfile.j2"
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/Dockerfile"
+  loop:
+    "{{ images }}"
+
+#- name: remove images
+#  docker_image:
+#    name: "{{ inventory_hostname }}/{{ item.name }}:{{ item.tag }}"
+#    force_absent: yes
+#    state: absent
+#  loop:
+#    "{{ images }}"
+
+- name: build container image
+  docker_image:
+    name: "{{ item.namespace }}/{{ item.name }}:{{ item.tag }}"
+    build:
+      path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+      pull: no
+#      nocache: yes
+    source: build
+    state: present
+    force_source : yes
+  loop:
+    "{{ images }}"
+
+#- name: Alternative way
+#  command: docker build -t "{{ item.namespace }}/{{ item.name }}:{{ item.tag }}" "/root/docker/build/{{ item.name }}/{{ item.tag }}"
+#  loop:
+#    "{{ images }}"
+
+- name: archive container image as a tarball
+  docker_image:
+    name: "{{ item.namespace }}/{{ item.name }}:{{ item.tag }}"
+    archive_path: "{{ user_path }}/docker/build/{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
+    source: pull
+    state: present
+  loop:
+    "{{ images }}"
+
+- name: Synchronization of src on builder to dest on the control machine 
+  synchronize:
+    mode: pull
+    src: "{{ user_path }}/docker/build/{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
+    dest: "{{ user_path }}/"
+  loop:
+    "{{ images }}"

@@ -1,0 +1,5 @@
+---
+- name: Deploy supervisord.conf
+  template:
+    src: nextcloud/supervisord.conf.j2
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/supervisord.conf"

@@ -1,0 +1,4 @@
+FROM {{ item.name }}:{{ item.tag }}
+
+COPY config.php /var/www/html/application/config/config.php
+COPY htaccess /var/www/html/.htaccess

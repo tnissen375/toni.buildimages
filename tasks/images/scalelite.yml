@@ -1,0 +1,28 @@
+- file:
+    state: absent
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+
+- name: Git checkout scalelite
+  git:
+    repo: "https://github.com/blindsidenetworks/scalelite.git"
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+    force: yes
+
+- name: Secure locations
+  include_role:
+    name: base
+    tasks_from: replace_after
+  vars:
+    findlist:
+      - { find: "location", path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/nginx/conf.d/scalelite.common", insert: "include snippets/auth.conf;" }
+
+- name: Deploy nginx conf files
+  template:
+    src: scalelite/scalelite-ssl.template
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/nginx/conf.d/scalelite-ssl.template"
+
+- name: Delete old dhparam.pem
+  file:
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/nginx/dhparam.pem"
+    state: absent  
+
