@@ -9,10 +9,11 @@
 
 - name: Copy snippets
   include_role:
-    name: openresty
+    name: toni.openresty
     tasks_from: snippets
   vars:
     nginx_conf_dir: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+    override_nginx_conf_dir: "/etc/nginx"
     nginx_snippets:
       - { srcname: "auth.conf.j2", destname: "auth.conf" } 
       - { srcname: "proxy.conf.j2", destname: "proxy.conf" }

@@ -33,14 +33,45 @@
 #   loop:
 #     "{{ imageconf.results }}"
 
-- include_tasks: "./images/{{ item.name }}.yml"
-  with_first_found:
-    - files:
-        - "{{ role_path }}/images/{{ item.name }}.yml"
-      skip: true
-  ignore_errors: yes
-  loop:
-    "{{ images }}"
+## This worked but does not anymore ?!?
+# - include_tasks: "images/{{ item.name }}.yml"
+#   with_first_found:
+#     - files:
+#         - "{{ role_path }}/images/{{ item.name }}.yml"
+#       skip: true
+#   ignore_errors: yes
+#   loop:
+#     "{{ images }}"
+
+- name: Include
+  include_tasks: "{{ filename }}"
+  when: filename is string
+  vars:
+    filename: "{{ lookup('first_found', dict(files=['{{ role_path }}/tasks/images/{{ item.name }}.yml'], skip=true)) }}"
+  with_items: "{{ images }}"
+
+# Works but context images lost
+# - shell: "echo {{lookup('first_found', findme, errors='ignore')}}"
+#   register: a
+#   vars:
+#     findme:
+#       - "{{ role_path }}/tasks/images/{{ item.name }}.yml"
+#   loop:
+#     "{{ images }}"     
+   
+# - include_tasks: "{{ item.stdout }}"
+#   when: item.stdout != ""
+#   loop:
+#     "{{ a.results }}"     
+
+
+# - name: show first existing file or ignore if none do
+#   debug: msg={{lookup('first_found', findme, errors='ignore')}}
+#   vars:
+#     findme:
+#       - "{{ role_path }}/tasks/images/{{ item.name }}.yml"
+#   loop:
+#     "{{ images }}"      
 
 - name: Deploy Dockerfile
   template:
