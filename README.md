@@ -41,9 +41,9 @@ Example Playbook to create a customized Openresty Image
       }
   vars:
     images:
-      - { namespace: "registry.jidu.eu", name: "openresty_base", tag: "1.19.3.1", basenamespace: "", basename: "alpine", basetag: "3.12" }
-      - { namespace: "registry.jidu.eu", name: "openresty_base_fat", tag: "1.19.3.1-alpine-fat", basenamespace: "", basename: "openresty_base", basetag: "1.19.3.1" }
-      - { namespace: "registry.jidu.eu", name: "openresty", tag: "1.19.3.1-alpine-fat", basenamespace: "", basename: "openresty_base_fat", basetag: "1.19.3.1-alpine-fat" }
+      - { namespace: "registry.toni-media.com", name: "openresty_base", tag: "1.19.3.1", basenamespace: "", basename: "alpine", basetag: "3.12" }
+      - { namespace: "registry.toni-media.com", name: "openresty_base_fat", tag: "1.19.3.1-alpine-fat", basenamespace: "", basename: "openresty_base", basetag: "1.19.3.1" }
+      - { namespace: "registry.toni-media.com", name: "openresty", tag: "1.19.3.1-alpine-fat", basenamespace: "", basename: "openresty_base_fat", basetag: "1.19.3.1-alpine-fat" }
 ```
 
 License
