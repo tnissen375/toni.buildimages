@@ -1,0 +1,20 @@
+FROM {{ item.basename }}:{{ item.basetag }}
+
+RUN apt-get update && apt-get install -y \
+    openssh-server \
+  && rm -rf /var/lib/apt/lists/* 
+
+RUN mkdir ~/.ssh \
+  && ssh-keygen -A \
+  && echo "root:root" | chpasswd \
+  && echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config \
+  && echo 'Port 22' >> /etc/ssh/sshd_config \
+  && echo " \
+Match User root \n\
+  PubkeyAuthentication yes \n\
+  AllowTcpForwarding yes\n\
+  X11Forwarding yes\n\
+  AllowAgentForwarding no\n\
+" >> /etc/ssh/sshd_config
+
+EXPOSE 22

@@ -14,13 +14,18 @@ Role Variables
 
 ```bash
   user_path:   # the user path where to store data during image building process. 
-  images.namespace  # Namespace of registry where finished images will be referenced to 
+  images.namespace  # Namespace of registry where finished images will be referenced to
   images.name # Name of destination image
   images.tag # Tag of destination image
   images.basenamespace # Namespace of source image where the new image will be based on. (Namespace found in docker registry (p.e. DockerHub,...)
   images.basename # Name of source image
   images.basetag # Tag of source image
 ```
+
+Dependencies
+------------
+
+Host with docker installed.
 
 Example Playbook to create a customized Openresty Image
 ----------------------------------------------------

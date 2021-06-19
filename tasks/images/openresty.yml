@@ -24,10 +24,10 @@
 # https://security.stackexchange.com/questions/70831/does-dh-parameter-file-need-to-be-unique-per-private-key
 - name: Register dhparam file
   stat:
-    path: ""
+    path: "{{ role_path }}/templates/dhp-4096.pem"
   register: dhparam_file_path
-#  delegate_to: localhost
- 
+ #delegate_to: localhost
+
 - name: Generating dhparam (It takes some time !)
   when: not dhparam_file_path.stat.exists
   shell: "openssl dhparam -out {{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/dhp-4096.pem 4096"
