@@ -34,6 +34,7 @@
 #  delegate_to: localhost
 
 - name: Copy dhparam to role
+  when: not dhparam_file_path.stat.exists
   synchronize:
     mode: pull
     src: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/dhp-4096.pem"
