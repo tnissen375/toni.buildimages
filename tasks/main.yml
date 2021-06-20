@@ -112,6 +112,7 @@
     archive_path: "{{ user_path }}/docker/build/{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
     source: pull
     state: present
+    timeout: 240
   loop:
     "{{ images }}"
 

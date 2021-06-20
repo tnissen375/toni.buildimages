@@ -29,7 +29,7 @@
  #delegate_to: localhost
 
 - name: Generating dhparam (It takes some time !)
-  when: not dhparam_file_path.stat.exists
+  when: not dhparam_file_path.stat.exists or dhparam_force|bool == true
   shell: "openssl dhparam -out {{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/dhp-4096.pem 4096"
 #  delegate_to: localhost
 
@@ -39,6 +39,13 @@
     mode: pull
     src: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/dhp-4096.pem"
     dest: "{{ role_path }}/templates/dhp-4096.pem"
+
+- name: Copy dhparam from role
+  when: dhparam_file_path.stat.exists
+  synchronize:
+    mode: pull
+    src: "{{ role_path }}/templates/dhp-4096.pem"
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/dhp-4096.pem"
 
 - name: Copy start script
   copy:
