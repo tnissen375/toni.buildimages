@@ -45,10 +45,11 @@
 
 - name: Include
   include_tasks: "{{ filename }}"
-  when: filename is string
+  when: "filename is string and (not tar is exists or force_rebuild)"
   vars:
     filename: "{{ lookup('first_found', dict(files=['{{ role_path }}/tasks/images/{{ item.name }}.yml'], skip=true)) }}"
-  with_items: "{{ images }}"
+    tar: "{{ user_path }}/{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
+  loop: "{{ images }}"
 
 # Works but context images lost
 # - shell: "echo {{lookup('first_found', findme, errors='ignore')}}"
@@ -74,9 +75,12 @@
 #     "{{ images }}"      
 
 - name: Deploy Dockerfile
+  when: "not tar is exists or force_rebuild"
   template:
     src: "{{ item.name }}/Dockerfile.j2"
     dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/Dockerfile"
+  vars:
+    tar: "{{ user_path }}/{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
   loop:
     "{{ images }}"
 
@@ -89,6 +93,7 @@
 #    "{{ images }}"
 
 - name: build container image
+  when: "not tar is exists or force_rebuild"
   docker_image:
     name: "{{ item.namespace }}/{{ item.name }}:{{ item.tag }}"
     build:
@@ -98,6 +103,8 @@
     source: build
     state: present
     force_source : yes
+  vars:
+    tar: "{{ user_path }}/{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
   loop:
     "{{ images }}"
 
@@ -107,19 +114,25 @@
 #    "{{ images }}"
 
 - name: archive container image as a tarball
+  when: "not tar is exists or force_rebuild"
   docker_image:
     name: "{{ item.namespace }}/{{ item.name }}:{{ item.tag }}"
     archive_path: "{{ user_path }}/docker/build/{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
     source: pull
     state: present
     timeout: 240
+  vars:
+    tar: "{{ user_path }}/{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
   loop:
     "{{ images }}"
 
 - name: Synchronization of src on builder to dest on the control machine 
+  when: "not tar is exists or force_rebuild"
   synchronize:
     mode: pull
     src: "{{ user_path }}/docker/build/{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
     dest: "{{ user_path }}/"
+  vars:
+    tar: "{{ user_path }}/{{ item.namespace }}_{{ item.name }}:{{ item.tag }}.tar"
   loop:
     "{{ images }}"

@@ -1,6 +1,7 @@
 ---
 domain: "toni-media.com"
 dhparam_force: false
+force_rebuild: false
 user_path: "/root"
 images:
       - { namespace: "registry.{{ domain }}", name: "openresty_base", tag: "1.19.3.1", basenamespace: "", basename: "alpine", basetag: "3.13" }
