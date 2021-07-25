@@ -9,6 +9,10 @@ RUN set -xe; \
         # Also symlink nginx binary to a location in PATH
         ln -s /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx 
 
+#RUN luarocks install kong-redis-cluster
+# OR
+#RUN luarocks install lua-resty-redis-cluster
+
 # Install/updates certificates
 RUN apk add --no-cache --virtual .run-deps \
     ca-certificates bash openssl \

@@ -1,0 +1,50 @@
+- file:
+    state: absent
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+
+- name: Git checkout https://github.com/plankanban/planka
+  git:
+    repo: "https://github.com/plankanban/planka"
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+    force: yes
+
+- name: Client autoconf credentials
+  lineinfile:
+    regexp: '^\s*emailOrUsername: data.emailOrUsername'
+    line: "        emailOrUsername: 'autoconf',"
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/client/src/components/Login/Login.jsx"
+    state: present
+
+- name: Client autoconf credentials
+  lineinfile:
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/client/src/components/Login/Login.jsx"
+    line: "        password: 'autoconf',"
+    insertafter: "\        emailOrUsername: 'autoconf'"
+
+- name: Insert client autologin
+  blockinfile:
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/client/src/components/Login/Login.jsx"
+    insertbefore: '^\s*useEffect'
+    block: |
+      ###autoconf
+          useEffect(() => {
+            handleSubmit();
+          }, [handleSubmit]);
+    marker: "    // {mark} ANSIBLE MANAGED"
+
+# the line was added because blockinfile does not respect spaces/ident
+- name: Remove line
+  lineinfile:
+    regexp: '^\###autoconf'
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/client/src/components/Login/Login.jsx"
+    state: absent
+
+- name: Deploy healthcheck
+  template:
+    src: planka/healthcheck.js.j2
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/server/healthcheck.js"
+    
+- name: Deploy create
+  template:
+    src: planka/create.js.j2
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/server/api/controllers/access-tokens/create.js"

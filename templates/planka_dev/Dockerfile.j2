@@ -1,4 +1,25 @@
-FROM {{ item.basenamespace }}/{{ item.basename }}:{{ item.basetag }}
+FROM {{ item.basename }}
+
+WORKDIR /app
+
+COPY client .
+
+RUN npm install npm@latest --global \
+  && npm install \
+  && npm install nodemon -g 
+  #--save-dev
+
+COPY server .
+COPY docker-start.sh start.sh
+COPY healthcheck.js healthcheck.js
+
+RUN chmod +x start.sh
+
+VOLUME /app/public/user-avatars
+VOLUME /app/public/project-background-images
+VOLUME /app/public/attachments
+
+EXPOSE 1337
 
 RUN apt-get update && apt-get install -y \
     openssh-server \
@@ -16,11 +37,5 @@ Match User root \n\
   X11Forwarding yes\n\
   AllowAgentForwarding no\n\
 " >> /etc/ssh/sshd_config
-
-RUN sed -i 's/#ClientAliveInterval.*/ClientAliveInterval 60/g' /etc/ssh/sshd_config \
-
-#I m not able to define alternative GOPATH for VSCode?!
-#Decided to use tools downloaded by VSCode, so the dir gets overwritten by docker volume mount, still here for tests
-RUN ln -s /go/ ~root/
 
 EXPOSE 22

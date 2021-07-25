@@ -1,0 +1,14 @@
+- file:
+    state: absent
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+
+- name: Git checkout https://github.com/plankanban/planka
+  git:
+    repo: "https://github.com/plankanban/planka"
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+    force: yes
+
+- name: Deploy healthcheck
+  template:
+    src: planka/healthcheck.js.j2
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/healthcheck.js"    
