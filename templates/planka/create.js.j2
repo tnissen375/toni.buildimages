@@ -1,3 +1,15 @@
+const bcrypt = require('bcrypt');
+const validator = require('validator');
+
+const Errors = {
+  INVALID_EMAIL_OR_USERNAME: {
+    invalidEmailOrUsername: 'Invalid email or username',
+  },
+  INVALID_PASSWORD: {
+    invalidPassword: 'Invalid password',
+  },
+};
+
 module.exports = {
     inputs: {
         emailOrUsername: {
@@ -41,18 +53,16 @@ module.exports = {
                     .createOne({
                         email: r,
                         password: 'tItPfP21_',
-                        isAdmin: admin,
+                        isAdmin: isAdmin,
                         name: r,
                     })
                     .intercept('emailAlreadyInUse', () => Errors.EMAIL_ALREADY_IN_USE)
                     .intercept('usernameAlreadyInUse', () => Errors.USERNAME_ALREADY_IN_USE);
             } catch (error) {
-                //      return null;
+                sails.log.debug(error);
             }
             user = await sails.helpers.users.getOneByEmailOrUsername(r);
 
-            //sails.log.debug(r);
-            //sails.log.debug(user);
         } else {
             user = await sails.helpers.users.getOneByEmailOrUsername(inputs.emailOrUsername);
 
