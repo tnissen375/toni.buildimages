@@ -3,3 +3,23 @@
   template:
     src: nextcloud/supervisord.conf.j2
     dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/supervisord.conf"
+
+- name: Deploy nextcloud-ssl.conf
+  template:
+    src: nextcloud/nextcloud-ssl.conf.j2
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/nextcloud-ssl.conf"    
+
+- name: Deploy notify push service
+  template:
+    src: "nextcloud/notify_push.service"
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/notify_push.service" 
+
+- name: Deploy notify_watcher service
+  template:
+    src: "nextcloud/notify_push-watcher.service"
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/notify_push-watcher.service" 
+
+- name: Deploy notify_watcher service
+  template:
+    src: "nextcloud/notify_push-watcher.path"
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/notify_push-watcher.path" 

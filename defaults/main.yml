@@ -4,9 +4,9 @@ dhparam_force: false
 force_rebuild: false
 user_path: "/root"
 images:
-      - { namespace: "registry.{{ domain }}", name: "openresty_base", tag: "1.19.3.1", basenamespace: "", basename: "alpine", basetag: "3.13" }
-      - { namespace: "registry.{{ domain }}", name: "openresty_base_fat", tag: "1.19.3.1-alpine-fat", basenamespace: "", basename: "openresty_base", basetag: "1.19.3.1" }
-      - { namespace: "registry.{{ domain }}", name: "openresty", tag: "1.19.3.1-alpine-fat", basenamespace: "", basename: "openresty_base_fat", basetag: "1.19.3.1-alpine-fat" }
-      - { namespace: "registry.{{ domain }}", name: "scalelite", tag: "1.19.3.1-alpine-fat", basenamespace: "", basename: "openresty", basetag: "1.19.3.1-alpine-fat" }
-      - { namespace: "registry.{{ domain }}", name: "sshd", tag: "3.13", basenamespace: "", basename: "alpine", basetag: "3.13" }
+      - { namespace: "registry.{{ domain }}", name: "openresty_base", tag: "1.19.9.1", basenamespace: "", basename: "alpine", basetag: "3.14" }
+      - { namespace: "registry.{{ domain }}", name: "openresty_base_fat", tag: "1.19.9.1-alpine-fat", basenamespace: "", basename: "openresty_base", basetag: "1.19.9.1" }
+      - { namespace: "registry.{{ domain }}", name: "openresty", tag: "1.19.9.1-alpine-fat", basenamespace: "", basename: "openresty_base_fat", basetag: "1.19.9.1-alpine-fat" }
+      - { namespace: "registry.{{ domain }}", name: "scalelite", tag: "1.19.9.1-alpine-fat", basenamespace: "", basename: "openresty", basetag: "1.19.9.1-alpine-fat" }
+      - { namespace: "registry.{{ domain }}", name: "sshd", tag: "3.14", basenamespace: "", basename: "alpine", basetag: "3.14" }
       - { namespace: "registry.{{ domain }}", name: "planka", tag: "0.1", basenamespace: "", basename: "node", basetag: "" }

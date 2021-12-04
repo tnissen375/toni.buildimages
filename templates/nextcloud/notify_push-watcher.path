@@ -1,0 +1,11 @@
+[Unit]
+Description=Restart Push daemon for Nextcloud clients when it receives updates
+Documentation=https://github.com/nextcloud/notify_push
+PartOf=notify_push-watcher.service
+
+[Path]
+PathModified=/var/www/html/apps/notify_push/bin/x86_64/notify_push
+Unit=notify_push-watcher.service
+
+[Install]
+WantedBy=multi-user.target

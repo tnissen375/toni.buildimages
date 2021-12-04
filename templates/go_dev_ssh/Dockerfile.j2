@@ -17,7 +17,7 @@ Match User root \n\
   AllowAgentForwarding no\n\
 " >> /etc/ssh/sshd_config
 
-RUN sed -i 's/#ClientAliveInterval.*/ClientAliveInterval 60/g' /etc/ssh/sshd_config \
+RUN sed -i 's/#ClientAliveInterval.*/ClientAliveInterval 60/g' /etc/ssh/sshd_config 
 
 #I m not able to define alternative GOPATH for VSCode?!
 #Decided to use tools downloaded by VSCode, so the dir gets overwritten by docker volume mount, still here for tests

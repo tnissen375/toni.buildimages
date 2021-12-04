@@ -8,6 +8,7 @@ Requirements
 ------------
 
 Docker installed on host. 
+If Docker alpine build fails with Error 127 (/bin/sh: Operation not permitted) have a look at the installed docker engine version. Docker Engine greater v20.10.x needed for Alpine with basetag 3.14
 
 Role Variables
 --------------
@@ -42,9 +43,9 @@ Have a look at
       }
   vars:
     images:
-      - { namespace: "registry.toni-media.com", name: "openresty_base", tag: "1.19.3.1", basenamespace: "", basename: "alpine", basetag: "3.13" }
-      - { namespace: "registry.toni-media.com", name: "openresty_base_fat", tag: "1.19.3.1-alpine-fat", basenamespace: "", basename: "openresty_base", basetag: "1.19.3.1" }
-      - { namespace: "registry.toni-media.com", name: "openresty", tag: "1.19.3.1-alpine-fat", basenamespace: "", basename: "openresty_base_fat", basetag: "1.19.3.1-alpine-fat" }
+      - { namespace: "registry.toni-media.com", name: "openresty_base", tag: "1.19.9.1", basenamespace: "", basename: "alpine", basetag: "3.14" }
+      - { namespace: "registry.toni-media.com", name: "openresty_base_fat", tag: "1.19.9.1-alpine-fat", basenamespace: "", basename: "openresty_base", basetag: "1.19.9.1" }
+      - { namespace: "registry.toni-media.com", name: "openresty", tag: "1.19.9.1-alpine-fat", basenamespace: "", basename: "openresty_base_fat", basetag: "1.19.9.1-alpine-fat" }
 ```
 
 License
