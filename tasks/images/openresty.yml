@@ -51,3 +51,10 @@
   copy:
     src: ./start
     dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+
+
+#https://raw.githubusercontent.com/api7/lua-resty-ipmatcher/master/resty/ipmatcher.lua
+- name: Deploy ipmatcher
+  template:
+    src: openresty/ipmatcher.lua
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/ipmatcher.lua"

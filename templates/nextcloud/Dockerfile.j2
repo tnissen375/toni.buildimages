@@ -31,16 +31,18 @@ COPY nextcloud-ssl.conf /etc/apache2/sites-available/nextcloud-ssl.conf
 RUN a2ensite nextcloud-ssl.conf
 # Apache
 
-#High performance push backend
-COPY notify_push.service /etc/systemd/system/notify_push.service
-COPY notify_push-watcher.service /etc/systemd/system/notify_push-watcher.service
-COPY notify_push-watcher.path /etc/systemd/system/notify_push-watcher.path
-RUN systemctl enable notify_push
+#High performance push backend (only systemd nabled systems -> supervisored.conf)
+#COPY notify_push.service /etc/systemd/system/notify_push.service
+#COPY notify_push-watcher.service /etc/systemd/system/notify_push-watcher.service
+#COPY notify_push-watcher.path /etc/systemd/system/notify_push-watcher.path
+#RUN systemctl enable notify_push
 
 # remove svg warning
 RUN apt remove imagemagick
 RUN sudo apt remove php-imagick
 RUN apt install php-imagick imagemagick
+#svg support
+RUN apt install libmagickcore-dev 
 
 COPY supervisord.conf /
 ENV NEXTCLOUD_UPDATE=1 
