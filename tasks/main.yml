@@ -74,6 +74,8 @@
 #   loop:
 #     "{{ images }}"      
 
+- debug: var=force_rebuild
+
 - name: Deploy Dockerfile
   when: "not tar is exists or force_rebuild"
   template:

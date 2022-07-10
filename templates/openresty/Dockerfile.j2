@@ -10,6 +10,7 @@ RUN set -xe; \
         ln -s /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx 
 
 COPY ipmatcher.lua /usr/local/openresty/lualib/resty/ipmatcher.lua
+
 #RUN luarocks install kong-redis-cluster
 # OR
 #RUN luarocks install lua-resty-redis-cluster

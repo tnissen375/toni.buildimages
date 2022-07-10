@@ -1,6 +1,6 @@
-- file:
-    state: absent
-    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+# - file:
+#     state: absent
+#     path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
 
 - name: Git checkout scalelite
   git:
@@ -10,7 +10,7 @@
 
 - name: Secure locations
   include_role:
-    name: base
+    name: toni.base
     tasks_from: replace_after
   vars:
     findlist:
@@ -25,4 +25,3 @@
   file:
     path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/nginx/dhparam.pem"
     state: absent  
-

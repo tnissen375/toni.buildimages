@@ -52,7 +52,6 @@
     src: ./start
     dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
 
-
 #https://raw.githubusercontent.com/api7/lua-resty-ipmatcher/master/resty/ipmatcher.lua
 - name: Deploy ipmatcher
   template:

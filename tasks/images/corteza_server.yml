@@ -1,0 +1,13 @@
+- file:
+    state: absent
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+
+- name: Git checkout https://github.com/tnissen375/corteza-server.git
+  git:
+    repo: "https://github.com/tnissen375/corteza-server.git"
+    dest: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}"
+    force: yes
+
+- file:
+    state: absent
+    path: "{{ user_path }}/docker/build/{{ item.name }}/{{ item.tag }}/.dockerignore"
