@@ -17,7 +17,7 @@ FROM {{ item.namespace }}/{{ item.basename }}:{{ item.basetag }}
 LABEL maintainer="Evan Wies <evan@neomantra.net>"
 
 # Docker Build Arguments
-ARG RESTY_LUAROCKS_VERSION="3.3.1"
+ARG RESTY_LUAROCKS_VERSION="3.9.2"
 
 RUN apk add --no-cache --virtual .build-deps \
         perl-dev \

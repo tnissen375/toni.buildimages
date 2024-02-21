@@ -1,12 +1,12 @@
 ---
-domain: "toni-media.com"
+domain: "hyconcept.com"
 dhparam_force: false
-force_rebuild: false
+force_rebuild: true
 user_path: "/root"
 images:
-      - { namespace: "registry.{{ domain }}", name: "openresty_base", tag: "1.21.4.1", basenamespace: "", basename: "alpine", basetag: "3.15" }
-      - { namespace: "registry.{{ domain }}", name: "openresty_base_fat", tag: "1.21.4.1-alpine-fat", basenamespace: "", basename: "openresty_base", basetag: "1.21.4.1" }
-      - { namespace: "registry.{{ domain }}", name: "openresty", tag: "1.21.4.1-alpine-fat", basenamespace: "", basename: "openresty_base_fat", basetag: "1.21.4.1-alpine-fat" }
-      - { namespace: "registry.{{ domain }}", name: "scalelite", tag: "1.21.4.1-alpine-fat", basenamespace: "", basename: "openresty", basetag: "1.21.4.1-alpine-fat" }
-      - { namespace: "registry.{{ domain }}", name: "sshd", tag: "3.15", basenamespace: "", basename: "alpine", basetag: "3.15" }
-      - { namespace: "registry.{{ domain }}", name: "planka", tag: "0.1", basenamespace: "", basename: "node", basetag: "" }
+      - { namespace: "registry.{{ domain }}", name: "openresty_base", tag: "1.25.3.1", basenamespace: "", basename: "alpine", basetag: "3.19" }
+      - { namespace: "registry.{{ domain }}", name: "openresty_base_fat", tag: "1.25.3.1-alpine-fat", basenamespace: "", basename: "openresty_base", basetag: "1.25.3.1" }
+      - { namespace: "registry.{{ domain }}", name: "openresty", tag: "1.25.3.1-alpine-fat", basenamespace: "", basename: "openresty_base_fat", basetag: "1.25.3.1-alpine-fat" }
+      # - { namespace: "registry.{{ domain }}", name: "scalelite", tag: "1.25.3.1-alpine-fat", basenamespace: "", basename: "openresty", basetag: "1.25.3.1-alpine-fat" }
+      # - { namespace: "registry.{{ domain }}", name: "sshd", tag: "3.19", basenamespace: "", basename: "alpine", basetag: "3.19" }
+      # - { namespace: "registry.{{ domain }}", name: "planka", tag: "0.1", basenamespace: "", basename: "node", basetag: "" }
